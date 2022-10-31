@@ -1,3 +1,9 @@
+Docs: https://jroitgrund.github.io/iat
+
+```
+npm install implicit-association-test
+```
+
 ```typescript
 import { IAT, Item } from "implicit-association-test";
 
