@@ -58,7 +58,7 @@ while (!iatStage.testComplete) {
   iatStage.right; // category and / or target to display on the right
   iatStage.correctChoice; // "left" or "right": the correct item assignment
 
-  iatStage.next(completionTimeMs, didUserMakeCorrectChoice);
+  iatStage = iatStage.next(completionTimeMs, didUserMakeCorrectChoice);
 }
 
 iatStage.results;
