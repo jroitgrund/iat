@@ -1,11 +1,12 @@
 {
-  "name": "iat",
-  "version": "1.0.0",
+  "name": "implicit-association-test",
+  "version": "",
   "description": "",
   "main": "dist/index.js",
   "files": [
     "dist/"
   ],
+  "repository": "https://github.com/jroitgrund/iat",
   "scripts": {
     "test": "jest",
     "build": "tsup",
