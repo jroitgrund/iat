@@ -4,5 +4,10 @@
     "skipLibCheck": true,
     "target": "es2020",
     "esModuleInterop": true
+  },
+  "typedocOptions": {
+    "entryPoints": ["src/index.ts"],
+    "out": "docs",
+    "exclude": ["./tsup.config.ts"]
   }
 }
