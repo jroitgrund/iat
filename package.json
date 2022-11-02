@@ -18,6 +18,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^29.2.0",
+    "@types/lodash": "^4.14.187",
     "@types/node": "^18.11.8",
     "@typescript-eslint/eslint-plugin": "^5.41.0",
     "@typescript-eslint/parser": "^5.41.0",
@@ -41,5 +42,8 @@
     "splitting": false,
     "sourcemap": true,
     "clean": true
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
   }
 }

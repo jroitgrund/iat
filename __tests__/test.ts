@@ -1,10 +1,10 @@
-import { BlockNumber, IAT, IATStage, Item } from "../src/index";
+import { BlockNumber, getResults, IAT, Item, Results } from "../src/index";
 
 type TargetT = "women" | "men";
 type CategoryT = "good" | "bad";
 
-describe("test", () => {
-  it("works", () => {
+describe("IAT", () => {
+  it("returns the raw results and scores them", () => {
     const targets: Record<TargetT, Item[]> = {
       women: [
         { type: "text", text: "agnes" },
@@ -49,8 +49,8 @@ describe("test", () => {
 
     let categoryLeftInitial: CategoryT | undefined = undefined;
     let categoryRightInitial: CategoryT | undefined = undefined;
-    let targetRightInitial: TargetT | undefined = undefined;
-    let targetLeftInitial: TargetT | undefined = undefined;
+    let targetRight: TargetT | undefined = undefined;
+    let targetLeft: TargetT | undefined = undefined;
 
     while (!iatStage.testComplete) {
       const itemText = getItemText(iatStage.item);
@@ -95,12 +95,12 @@ describe("test", () => {
       expect(iatStage.trial).toBeLessThanOrEqual(3);
 
       if (iatStage.block === 1) {
-        if (targetLeftInitial == null || targetRightInitial == null) {
-          targetLeftInitial = checkNotNull(iatStage.left.target);
-          targetRightInitial = checkNotNull(iatStage.right.target);
+        if (targetLeft == null || targetRight == null) {
+          targetLeft = checkNotNull(iatStage.left.target);
+          targetRight = checkNotNull(iatStage.right.target);
         } else {
-          expect(iatStage.left.target).toEqual(targetLeftInitial);
-          expect(iatStage.right.target).toEqual(targetRightInitial);
+          expect(iatStage.left.target).toEqual(targetLeft);
+          expect(iatStage.right.target).toEqual(targetRight);
         }
       } else if (iatStage.block === 2) {
         if (categoryLeftInitial == null || categoryRightInitial == null) {
@@ -111,29 +111,54 @@ describe("test", () => {
           expect(iatStage.right.category).toEqual(categoryRightInitial);
         }
       } else if (iatStage.block === 3 || iatStage.block === 4) {
-        expect(iatStage.left.target).toEqual(targetLeftInitial);
-        expect(iatStage.right.target).toEqual(targetRightInitial);
+        expect(iatStage.left.target).toEqual(targetLeft);
+        expect(iatStage.right.target).toEqual(targetRight);
         expect(iatStage.left.category).toEqual(categoryLeftInitial);
         expect(iatStage.right.category).toEqual(categoryRightInitial);
       } else if (iatStage.block === 5) {
-        expect(iatStage.left.target).toEqual(targetRightInitial);
-        expect(iatStage.right.target).toEqual(targetLeftInitial);
+        expect(iatStage.left.category).toEqual(categoryRightInitial);
+        expect(iatStage.right.category).toEqual(categoryLeftInitial);
       } else if (iatStage.block === 6 || iatStage.block === 7) {
-        expect(iatStage.left.target).toEqual(targetRightInitial);
-        expect(iatStage.right.target).toEqual(targetLeftInitial);
+        expect(iatStage.left.target).toEqual(targetLeft);
+        expect(iatStage.right.target).toEqual(targetRight);
         expect(iatStage.left.category).toEqual(categoryRightInitial);
         expect(iatStage.right.category).toEqual(categoryLeftInitial);
       }
 
-      iatStage = iatStage.next(100, true);
+      iatStage = iatStage.next(
+        iatStage.block == 6 || iatStage.block == 7 ? 400 : 350,
+        true
+      );
       trials++;
     }
 
-    const results = getTestResults(iatStage);
+    const rawResults = iatStage.rawResults;
     [1, 2, 3, 4, 5, 6, 7].forEach((block) =>
-      expect(results[block as BlockNumber]).toHaveLength(3)
+      expect(rawResults.blocks[block as BlockNumber]).toHaveLength(3)
     );
     expect(trials).toEqual(21);
+    expect(rawResults.positiveScoreAssociations).toEqual(
+      expect.arrayContaining([
+        { category: categoryLeftInitial, target: targetLeft },
+        { category: categoryRightInitial, target: targetRight },
+      ])
+    );
+    expect(rawResults.negativeScoreAssociations).toEqual(
+      expect.arrayContaining([
+        { category: categoryRightInitial, target: targetLeft },
+        { category: categoryLeftInitial, target: targetRight },
+      ])
+    );
+
+    const results = getValidResults(getResults(rawResults));
+
+    expect(results.association).toEqual(
+      expect.arrayContaining([
+        { category: categoryLeftInitial, target: targetLeft },
+        { category: categoryRightInitial, target: targetRight },
+      ])
+    );
+    expect(results.d).toEqual(2);
   });
 });
 
@@ -145,12 +170,12 @@ function getItemText(item: Item) {
   return item.text;
 }
 
-function getTestResults<T, U>(iatStage: IATStage<T, U>) {
-  if (!iatStage.testComplete) {
+function getValidResults<T, U>(results: Results<T, U>) {
+  if (results.type === "invalid") {
     throw new Error();
   }
 
-  return iatStage.results;
+  return results;
 }
 
 function checkNotNull<T>(value: T | null | undefined): T {

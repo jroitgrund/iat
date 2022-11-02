@@ -1,11 +1,17 @@
-Docs: https://jroitgrund.github.io/iat
+### Auto-genereated API docs
+
+https://jroitgrund.github.io/iat
+
+### Installation
 
 ```
 npm install implicit-association-test
 ```
 
+### Usage
+
 ```typescript
-import { IAT, Item } from "implicit-association-test";
+import { getResults, IAT, Item } from "implicit-association-test";
 
 type TargetT = "insects" | "flowers";
 type CategoryT = "pleasant" | "unpleasant";
@@ -61,5 +67,6 @@ while (!iatStage.testComplete) {
   iatStage = iatStage.next(completionTimeMs, didUserMakeCorrectChoice);
 }
 
-iatStage.results;
+iatStage.rawResults; // completion times and correctness for each trial
+const results = getResults(iatStage.rawResults); // d-score + which association was preferred
 ```

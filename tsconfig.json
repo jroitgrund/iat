@@ -3,7 +3,8 @@
     "strict": true,
     "skipLibCheck": true,
     "target": "es2020",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "node"
   },
   "typedocOptions": {
     "entryPoints": ["src/index.ts"],
