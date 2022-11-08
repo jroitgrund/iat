@@ -4,8 +4,14 @@
     "skipLibCheck": true,
     "target": "es2020",
     "esModuleInterop": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "rootDir": "src",
+    "declaration": true,
+    "sourceMap": true,
+    "module": "CommonJS"
   },
+  "include": ["src/**/*"],
   "typedocOptions": {
     "entryPoints": ["src/index.ts"],
     "out": "docs",
