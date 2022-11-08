@@ -2,7 +2,7 @@
   "name": "implicit-association-test",
   "version": "",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "files": [
     "dist/"
   ],
