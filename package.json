@@ -38,7 +38,6 @@
     ],
     "dts": true,
     "platform": "neutral",
-    "format": "esm",
     "splitting": false,
     "sourcemap": true,
     "clean": true
