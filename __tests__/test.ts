@@ -4,6 +4,56 @@ type TargetT = "women" | "men";
 type CategoryT = "good" | "bad";
 
 describe("IAT", () => {
+  it("returns correct results for this bad example", () => {
+    const results = getResults({
+      blocks: {
+        "1": [
+          { completionTimeMs: 1368, correct: false },
+          { completionTimeMs: 776, correct: false },
+          { completionTimeMs: 591, correct: false },
+        ],
+        "2": [
+          { completionTimeMs: 1208, correct: false },
+          { completionTimeMs: 1223, correct: false },
+          { completionTimeMs: 751, correct: false },
+        ],
+        "3": [
+          { completionTimeMs: 1216, correct: false },
+          { completionTimeMs: 1464, correct: false },
+          { completionTimeMs: 807, correct: false },
+        ],
+        "4": [
+          { completionTimeMs: 3696, correct: false },
+          { completionTimeMs: 784, correct: false },
+          { completionTimeMs: 1552, correct: false },
+        ],
+        "5": [
+          { completionTimeMs: 2640, correct: false },
+          { completionTimeMs: 1519, correct: false },
+          { completionTimeMs: 919, correct: false },
+        ],
+        "6": [
+          { completionTimeMs: 1736, correct: false },
+          { completionTimeMs: 849, correct: false },
+          { completionTimeMs: 951, correct: false },
+        ],
+        "7": [
+          { completionTimeMs: 1176, correct: false },
+          { completionTimeMs: 928, correct: false },
+          { completionTimeMs: 944, correct: false },
+        ],
+      },
+      positiveScoreAssociations: [
+        { target: "Flowers", category: "Unpleasant" },
+        { target: "Insects", category: "Pleasant" },
+      ],
+      negativeScoreAssociations: [
+        { target: "Flowers", category: "Pleasant" },
+        { target: "Insects", category: "Unpleasant" },
+      ],
+    });
+    expect(results.type).toEqual("invalid");
+  });
   it("returns the raw results and scores them", () => {
     const targets: Record<TargetT, Item[]> = {
       women: [

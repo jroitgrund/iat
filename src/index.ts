@@ -23,7 +23,10 @@ export type RawResults<CategoryT, TargetT> = {
 export type Results<CategoryT, TargetT> =
   | {
       type: "invalid";
-      reason: "no-low-latency-trials" | "too-many-high-latency-trials";
+      reason:
+        | "no-low-latency-trials"
+        | "too-many-high-latency-trials"
+        | "no-correct-answers";
     }
   | {
       type: "valid";
@@ -312,6 +315,10 @@ export function getResults<CategoryT, TargetT>(
     (meansWithErrorsReplaced[6] - meansWithErrorsReplaced[3]) /
       standardDeviationB4andB7,
   ]);
+
+  if (isNaN(d)) {
+    return { type: "invalid", reason: "no-correct-answers" };
+  }
 
   return {
     type: "valid",
